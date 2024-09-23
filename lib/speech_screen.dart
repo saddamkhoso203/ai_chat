@@ -1,0 +1,68 @@
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/material.dart';
+
+class SpeechScreen extends StatefulWidget {
+  const SpeechScreen({super.key});
+
+  @override
+  State<SpeechScreen> createState() => _SpeechScreenState();
+}
+ var text = "Hold the button and start Speeking";
+ var isListening = false;
+class _SpeechScreenState extends State<SpeechScreen> {
+  @override
+  Widget build(BuildContext context) {
+   
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: AvatarGlow(
+        animate: isListening,
+        duration: Duration(milliseconds: 2000),
+        glowColor: Colors.green,
+        repeat: true,
+
+        child: GestureDetector(
+          onTapDown: (details) {
+            setState(() {
+              isListening = true;
+            });
+          },
+          onTapUp: (details) {
+            setState(() {
+              isListening =false;
+            });
+          },
+          child: CircleAvatar(
+            backgroundColor: Colors.green,
+            radius: 35,
+          
+          child: Icon( isListening ? Icons.mic : Icons.mic_none, color: Colors.white,),
+          ),
+        ),
+      ),
+      appBar: AppBar(
+        leading: Icon(
+          Icons.sort_rounded,
+          color: Colors.white,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.green,
+        elevation: 0.0,
+        title: Text(
+          "Speech to Text",
+          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        margin: EdgeInsets.only(bottom: 150),
+        child: Text(
+          text,
+          style: TextStyle(
+              color: Colors.black54, fontSize: 24, fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+}
