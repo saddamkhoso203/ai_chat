@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class SpeechScreen extends StatefulWidget {
   const SpeechScreen({super.key});
@@ -7,12 +8,14 @@ class SpeechScreen extends StatefulWidget {
   @override
   State<SpeechScreen> createState() => _SpeechScreenState();
 }
- var text = "Hold the button and start Speeking";
- var isListening = false;
+
+SpeechToText speechToText = SpeechToText();
+var text = "Hold the button and start Speeking";
+var isListening = false;
+
 class _SpeechScreenState extends State<SpeechScreen> {
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
@@ -20,23 +23,32 @@ class _SpeechScreenState extends State<SpeechScreen> {
         duration: Duration(milliseconds: 2000),
         glowColor: Colors.green,
         repeat: true,
-
         child: GestureDetector(
-          onTapDown: (details) {
-            setState(() {
-              isListening = true;
-            });
-          },
+          onTapDown: (details) async {
+            if (isListening) {
+              var available = await speechToText.initialize();
+              if (available) {
+                setState(() {
+                  isListening = true;
+                  speechToText.listen(
+                    onResult: (result) {
+                      setState(() {
+                        text = result.recognizedWords;
+                        print("voice recorded00");
+                      });  }   );   }); }}  },
           onTapUp: (details) {
             setState(() {
-              isListening =false;
+              isListening = false;
             });
+            speechToText.stop();
           },
           child: CircleAvatar(
             backgroundColor: Colors.green,
             radius: 35,
-          
-          child: Icon( isListening ? Icons.mic : Icons.mic_none, color: Colors.white,),
+            child: Icon(
+              isListening ? Icons.mic : Icons.mic_none,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
