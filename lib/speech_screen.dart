@@ -25,7 +25,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
         repeat: true,
         child: GestureDetector(
           onTapDown: (details) async {
-            if (isListening) {
+            if (!isListening) {
               var available = await speechToText.initialize();
               if (available) {
                 setState(() {
@@ -35,7 +35,9 @@ class _SpeechScreenState extends State<SpeechScreen> {
                       setState(() {
                         text = result.recognizedWords;
                         print("voice recorded00");
-                      });  }   );   }); }}  },
+                      });  }   );   }); }} 
+            },
+      
           onTapUp: (details) {
             setState(() {
               isListening = false;
@@ -65,14 +67,21 @@ class _SpeechScreenState extends State<SpeechScreen> {
           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
         ),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        margin: EdgeInsets.only(bottom: 150),
-        child: Text(
-          text,
-          style: TextStyle(
-              color: Colors.black54, fontSize: 24, fontWeight: FontWeight.w600),
+      body: SingleChildScrollView(
+        reverse: true,
+        physics: BouncingScrollPhysics(),
+        
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height*0.7,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          margin: EdgeInsets.only(bottom: 150),
+          child: Text(
+            text,
+            style: TextStyle(
+                color:isListening ? Colors.black87 : Colors.black54, fontSize: 24, fontWeight: FontWeight.w600),
+          ),
         ),
       ),
     );
